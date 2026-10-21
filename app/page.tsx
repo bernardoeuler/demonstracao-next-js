@@ -10,30 +10,20 @@ export default async function HomePage() {
   const { data, meta } = await getCotacoes({ revalidate: 15 });
 
   return (
-    <main>
-      <section className="page-hero">
-        <div className="hero-tagline">
-          <span className="badge-green">Mercado Aberto</span>
-          <span className="badge-server">Atualização Periódica</span>
+    <main className="content-container">
+      <div className="view-header">
+        <div>
+          <h2 className="view-title">Mercado</h2>
+          <p className="view-desc">Cotações atualizadas com revalidação estática (ISR).</p>
         </div>
-        <h2 className="hero-title">Cotações e Câmbio de Moedas</h2>
-        <p className="hero-description">
-          Acompanhe os principais pares de moedas e criptomoedas negociadas em relação ao Real (BRL).
-          Dados consolidados de fechamento e taxas de compra e venda atualizadas.
-        </p>
-      </section>
+        <LiveReloadIndicator
+          serverTimestamp={meta.timestamp}
+          revalidateSeconds={15}
+          strategyName="ISR (15s)"
+        />
+      </div>
 
-      {/* Indicador de Status e Atualização */}
-      <LiveReloadIndicator
-        serverTimestamp={meta.timestamp}
-        revalidateSeconds={15}
-        strategyName="Cache 15s"
-      />
-
-      {/* Grid de Cotações */}
       <QuotesGrid cotacoes={data} generatedAt={meta.generatedAt} />
-
-      {/* Conversor Interativo */}
       <CurrencyConverter cotacoes={data} />
     </main>
   );

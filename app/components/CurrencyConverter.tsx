@@ -12,53 +12,22 @@ export function CurrencyConverter({ cotacoes }: CurrencyConverterProps) {
 
   const usdRate = parseFloat(cotacoes.USDBRL.bid) || 5.6;
   const eurRate = parseFloat(cotacoes.EURBRL.bid) || 6.1;
-  const btcRate = parseFloat(cotacoes.BTCBRL.bid) || 390000;
   const gbpRate = parseFloat(cotacoes.GBPBRL.bid) || 7.3;
+  const btcRate = parseFloat(cotacoes.BTCBRL.bid) || 390000;
 
-  const convertedUSD = amountBRL / usdRate;
-  const convertedEUR = amountBRL / eurRate;
-  const convertedBTC = amountBRL / btcRate;
-  const convertedGBP = amountBRL / gbpRate;
-
-  const presets = [100, 500, 1000, 5000, 10000];
+  const presets = [100, 500, 1000, 5000];
 
   return (
-    <div className="converter-card">
-      <div className="converter-header">
-        <div>
-          <h3 className="converter-title">Simulador de Conversão de Câmbio</h3>
-          <p className="converter-subtitle">
-            Calcule instantaneamente o valor equivalente em moeda estrangeira e cripto com base no valor de compra atual.
-          </p>
-        </div>
-      </div>
-
-      <div className="converter-input-group">
-        <label htmlFor="amount-input" className="converter-label">
-          Valor em Reais (BRL):
-        </label>
-        <div className="input-wrapper">
-          <span className="input-prefix">R$</span>
-          <input
-            id="amount-input"
-            type="number"
-            min="0"
-            step="50"
-            value={isNaN(amountBRL) ? "" : amountBRL}
-            onChange={(e) => setAmountBRL(parseFloat(e.target.value) || 0)}
-            className="converter-input"
-            placeholder="0.00"
-          />
-        </div>
-
-        <div className="presets-row">
-          <span className="presets-label">Atalhos rápidos:</span>
+    <div className="converter-box">
+      <div className="converter-top">
+        <h3 className="converter-heading">Conversor de Câmbio</h3>
+        <div className="converter-presets">
           {presets.map((val) => (
             <button
               key={val}
               type="button"
               onClick={() => setAmountBRL(val)}
-              className={`preset-pill ${amountBRL === val ? "preset-pill-active" : ""}`}
+              className={`preset-btn ${amountBRL === val ? "preset-btn-active" : ""}`}
             >
               R$ {val.toLocaleString("pt-BR")}
             </button>
@@ -66,49 +35,65 @@ export function CurrencyConverter({ cotacoes }: CurrencyConverterProps) {
         </div>
       </div>
 
-      <div className="results-grid">
-        <div className="result-item">
-          <div className="result-flag">🇺🇸 Dólar Comercial</div>
-          <div className="result-value">
-            ${" "}
-            {convertedUSD.toLocaleString("en-US", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}
+      <div className="converter-body">
+        <div className="converter-field">
+          <label htmlFor="brl-input" className="converter-field-label">
+            Valor em Reais (BRL)
+          </label>
+          <div className="input-group">
+            <span className="input-currency">R$</span>
+            <input
+              id="brl-input"
+              type="number"
+              min="0"
+              value={isNaN(amountBRL) ? "" : amountBRL}
+              onChange={(e) => setAmountBRL(parseFloat(e.target.value) || 0)}
+              className="converter-text-input"
+              placeholder="0,00"
+            />
           </div>
-          <div className="result-rate">1 USD = R$ {usdRate.toFixed(4)}</div>
         </div>
 
-        <div className="result-item">
-          <div className="result-flag">🇪🇺 Euro</div>
-          <div className="result-value">
-            €{" "}
-            {convertedEUR.toLocaleString("de-DE", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}
+        <div className="conversion-outputs">
+          <div className="output-chip">
+            <span className="chip-label">🇺🇸 Dólar</span>
+            <span className="chip-val">
+              ${" "}
+              {(amountBRL / usdRate).toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+            </span>
           </div>
-          <div className="result-rate">1 EUR = R$ {eurRate.toFixed(4)}</div>
-        </div>
 
-        <div className="result-item">
-          <div className="result-flag">🇬🇧 Libra Esterlina</div>
-          <div className="result-value">
-            £{" "}
-            {convertedGBP.toLocaleString("en-GB", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}
+          <div className="output-chip">
+            <span className="chip-label">🇪🇺 Euro</span>
+            <span className="chip-val">
+              €{" "}
+              {(amountBRL / eurRate).toLocaleString("de-DE", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+            </span>
           </div>
-          <div className="result-rate">1 GBP = R$ {gbpRate.toFixed(4)}</div>
-        </div>
 
-        <div className="result-item highlight-item">
-          <div className="result-flag">₿ Bitcoin</div>
-          <div className="result-value btc-val">
-            ₿ {convertedBTC < 0.0001 ? convertedBTC.toFixed(7) : convertedBTC.toFixed(5)}
+          <div className="output-chip">
+            <span className="chip-label">🇬🇧 Libra</span>
+            <span className="chip-val">
+              £{" "}
+              {(amountBRL / gbpRate).toLocaleString("en-GB", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+            </span>
           </div>
-          <div className="result-rate">1 BTC = R$ {btcRate.toLocaleString("pt-BR")}</div>
+
+          <div className="output-chip output-chip-btc">
+            <span className="chip-label">₿ Bitcoin</span>
+            <span className="chip-val">
+              ₿ {(amountBRL / btcRate).toFixed(5)}
+            </span>
+          </div>
         </div>
       </div>
     </div>
